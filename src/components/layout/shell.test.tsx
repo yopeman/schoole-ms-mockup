@@ -4,6 +4,7 @@ import type { AppUser } from "@/types";
 import { AppHeader } from "@/components/layout/app-header";
 import { UserMenu } from "@/components/layout/user-menu";
 import { SessionProvider } from "@/lib/auth/session";
+import { db } from "@/lib/mock/server";
 import { seed } from "@/lib/mock/seed";
 import { STORAGE_KEYS } from "@/lib/mock/constants";
 
@@ -46,7 +47,6 @@ describe("app shell", () => {
     );
 
     const trigger = await screen.findByLabelText("Notifications");
-    await waitFor(() => expect(screen.getByLabelText("Notifications")).toBeTruthy());
 
     // The popup only mounts when opened, and the crash happens inside it.
     fireEvent.click(trigger);
@@ -70,12 +70,50 @@ describe("app shell", () => {
       </SessionProvider>,
     );
 
-    const trigger = await screen.findByText("admin@schoole.edu.in");
-    fireEvent.click(trigger);
+    fireEvent.click(await screen.findByText("admin@schoole.edu.in"));
     await waitFor(() => expect(screen.getByText("Switch persona (demo)")).toBeTruthy());
 
     expect(errors.filter((e) => e.includes("MenuGroupContext"))).toHaveLength(0);
     expect(screen.getByText("Reset mock data")).toBeTruthy();
     spy.mockRestore();
+  });
+
+  it("switches persona from the menu", async () => {
+    signIn("admin@schoole.edu.in");
+
+    render(
+      <SessionProvider>
+        <UserMenu />
+      </SessionProvider>,
+    );
+
+    fireEvent.click(await screen.findByText("admin@schoole.edu.in"));
+    fireEvent.click((await screen.findAllByText("Teacher"))[0]);
+
+    // The persisted session now carries the teacher persona.
+    await waitFor(() => {
+      const session = JSON.parse(window.localStorage.getItem(STORAGE_KEYS.session) ?? "{}");
+      expect(session.role).toBe("teacher");
+    });
+  });
+
+  it("resets mock data from the menu", async () => {
+    signIn("admin@schoole.edu.in");
+
+    await db.create("announcements", { id: "shell-temp", title: "Temp notice" } as never);
+    expect(db.all("announcements").some((a) => (a as { id: string }).id === "shell-temp")).toBe(true);
+
+    render(
+      <SessionProvider>
+        <UserMenu />
+      </SessionProvider>,
+    );
+
+    fireEvent.click(await screen.findByText("admin@schoole.edu.in"));
+    fireEvent.click((await screen.findAllByText("Reset mock data"))[0]);
+
+    await waitFor(() => {
+      expect(db.all("announcements").some((a) => (a as { id: string }).id === "shell-temp")).toBe(false);
+    });
   });
 });
