@@ -1,0 +1,162 @@
+import type { Role } from "@/types";
+
+export const PERMISSIONS = [
+  "dashboard.view",
+  "students.view",
+  "students.viewOwn",
+  "students.manage",
+  "teachers.view",
+  "teachers.manage",
+  "families.view",
+  "families.viewOwn",
+  "staff.view",
+  "staff.manage",
+  "admissions.view",
+  "admissions.manage",
+  "academics.view",
+  "academics.manage",
+  "attendance.view",
+  "attendance.viewOwn",
+  "attendance.mark",
+  "timetable.view",
+  "timetable.manage",
+  "exams.view",
+  "exams.manage",
+  "grades.view",
+  "grades.viewOwn",
+  "grades.enter",
+  "finance.view",
+  "finance.manage",
+  "announcements.view",
+  "announcements.manage",
+  "messages.view",
+  "reports.view",
+  "events.view",
+  "assets.view",
+  "assets.manage",
+  "settings.view",
+  "settings.manage",
+] as const;
+
+export type Permission = (typeof PERMISSIONS)[number];
+
+const ALL = [...PERMISSIONS];
+
+const as = (...permissions: Permission[]): Permission[] => permissions;
+
+export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
+  admin: ALL,
+  director: as(
+    "dashboard.view",
+    "students.view",
+    "students.manage",
+    "teachers.view",
+    "teachers.manage",
+    "families.view",
+    "staff.view",
+    "admissions.view",
+    "academics.view",
+    "attendance.view",
+    "timetable.view",
+    "exams.view",
+    "grades.view",
+    "finance.view",
+    "announcements.view",
+    "announcements.manage",
+    "messages.view",
+    "reports.view",
+    "events.view",
+    "assets.view",
+    "settings.view",
+  ),
+  teacher: as(
+    "dashboard.view",
+    "students.view",
+    "families.view",
+    "academics.view",
+    "attendance.view",
+    "attendance.mark",
+    "timetable.view",
+    "exams.view",
+    "grades.view",
+    "grades.enter",
+    "announcements.view",
+    "messages.view",
+    "events.view",
+  ),
+  student: as(
+    "dashboard.view",
+    "students.viewOwn",
+    "academics.view",
+    "attendance.viewOwn",
+    "timetable.view",
+    "exams.view",
+    "grades.viewOwn",
+    "announcements.view",
+    "messages.view",
+    "events.view",
+  ),
+  family: as(
+    "dashboard.view",
+    "students.viewOwn",
+    "families.viewOwn",
+    "attendance.viewOwn",
+    "grades.viewOwn",
+    "announcements.view",
+    "messages.view",
+    "finance.view",
+    "events.view",
+  ),
+  staff: as(
+    "dashboard.view",
+    "students.view",
+    "admissions.view",
+    "admissions.manage",
+    "academics.view",
+    "attendance.view",
+    "timetable.view",
+    "announcements.view",
+    "messages.view",
+    "events.view",
+    "assets.view",
+    "assets.manage",
+  ),
+  accountant: as(
+    "dashboard.view",
+    "students.view",
+    "teachers.view",
+    "staff.view",
+    "finance.view",
+    "finance.manage",
+    "reports.view",
+    "announcements.view",
+    "messages.view",
+    "events.view",
+  ),
+};
+
+export const can = (role: Role | undefined, permission: Permission) =>
+  !!role && (ROLE_PERMISSIONS[role] ?? []).includes(permission);
+
+export const canAny = (role: Role | undefined, permissions: Permission[]) =>
+  permissions.some((permission) => can(role, permission));
+
+export const ROLE_LABELS: Record<Role, string> = {
+  admin: "Administrator",
+  director: "Director",
+  teacher: "Teacher",
+  student: "Student",
+  family: "Parent / Family",
+  staff: "Staff",
+  accountant: "Accountant",
+};
+
+export const ROLE_DESCRIPTIONS: Record<Role, string> = {
+  admin: "Full system access including settings and user management",
+  director: "School-wide academic and operational oversight",
+  teacher: "Class management, attendance and grades",
+  student: "Own academics, attendance and announcements",
+  family: "Children's attendance, grades and fees",
+  staff: "Admissions, registry and campus operations",
+  accountant: "Fees, payroll, expenses and financial reports",
+};
