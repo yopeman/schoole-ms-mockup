@@ -34,6 +34,7 @@ export function useLookups() {
     const invoices = store.selectAll<Invoice>("invoices");
 
     const classMap = asMap(classes);
+    const familyMap = asMap(families);
     const sectionMap = asMap(sections);
     const subjectMap = asMap(subjects);
     const teacherMap = asMap(teachers);
@@ -54,6 +55,7 @@ export function useLookups() {
       invoices,
       studentMap,
       teacherMap,
+      familyMap,
       classMap,
       sectionMap,
       subjectMap,
