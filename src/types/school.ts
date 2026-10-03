@@ -65,6 +65,7 @@ export type MaintenanceTicket = EntityMeta & {
 };
 
 export type SchoolProfile = EntityMeta & {
+  id: string;
   name: string;
   shortName: string;
   tagline: string;

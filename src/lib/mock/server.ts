@@ -136,6 +136,16 @@ export const remove = async (entity: EntityName, id: string): Promise<{ id: stri
   return { id };
 };
 
+export const getSingleton = async <T extends { id: string }>(entity: EntityName): Promise<T | null> => {
+  await delay();
+  return store.getSingleton<T>(entity);
+};
+
+export const updateSingleton = async <T extends { id: string }>(entity: EntityName, changes: Partial<T>): Promise<T | null> => {
+  await delay();
+  return store.patchSingleton<T>(entity, changes);
+};
+
 export const reset = async () => {
   store.resetOverlay();
   return { ok: true as const };
@@ -233,4 +243,4 @@ export const results = {
 
 export const now = () => TODAY;
 
-export const db = { list, all, get, create, update, remove, attendance, results, reset };
+export const db = { list, all, get, create, update, remove, getSingleton, updateSingleton, attendance, results, reset };

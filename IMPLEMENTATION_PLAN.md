@@ -100,7 +100,22 @@ Default rule:
 - `StatCard`, `PageHeader`, `FormDialog`, `ConfirmDialog`, `StatusBadge`, `EmptyState`, `Avatar`, `ChartCard`, `Tabs`, `Breadcrumbs`, `PermissionGate`.
 - Toast notifications, optimistic updates on edits.
 
-## 6. Phases & Steps
+## 6. Phases & Steps — Status: All complete
+
+| Phase | Scope | Status |
+| --- | --- | --- |
+| 0 | Scaffold (Next.js 15, Tailwind v4, shadcn/Base UI, structure) | ✅ |
+| 1 | Domain types, seeded PRNG, seed data, mock gateway, auth/permissions | ✅ |
+| 2 | App shell, role-aware nav, guard, global search, login | ✅ |
+| 3 | Seven role dashboards + analytics layer | ✅ |
+| 4 | Students, Teachers, Families, Staff + DataTable + profiles | ✅ |
+| 5 | Classes, Subjects, Timetable, Attendance, Exams & results | ✅ |
+| 6 | Fees & invoices, Payroll, Expenses | ✅ |
+| 7 | Announcements, Messages, Events, Admissions, Assets, Reports | ✅ |
+| 8 | Settings (profile, calendar, permission matrix, data tools) + polish | ✅ |
+
+Delivered: 26 routes, 20 navigable feature pages, 88 tests, README.
+
 
 **Phase 0 — Setup** (scaffold Next.js + Tailwind + shadcn, tsconfig paths, folder structure, layout shell, theme).
 
@@ -123,7 +138,7 @@ Default rule:
 
 **Phase 7 — Communication & ops** — Announcements, Messages, Calendar/Events, Reports.
 
-**Phase 8 — Settings & polish** — settings pages, permission matrix view, empty/error states, skeletons, a11y pass, responsive pass, seed-data consistency test.
+
 
 ## 7. Validation Checklist
 

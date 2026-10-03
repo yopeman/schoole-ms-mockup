@@ -123,6 +123,29 @@ export const remove = (entity: EntityName, id: string) => {
   writeOverlay(state);
 };
 
+/**
+ * Singleton records (e.g. the school profile) live in the seed as objects
+ * rather than arrays, so they bypass the list/CRUD path.
+ */
+export const getSingleton = <T extends { id: string }>(entity: EntityName): T | null => {
+  const value = seed[entity] as unknown as T | undefined;
+  if (!value || typeof value !== "object" || Array.isArray(value) || !("id" in value)) return null;
+
+  const state = getOverlay();
+  const patch = state.updated[entity]?.[value.id];
+  return (patch ? { ...value, ...patch } : value) as T;
+};
+
+export const patchSingleton = <T extends { id: string }>(entity: EntityName, changes: Partial<T>): T | null => {
+  const current = getSingleton<T>(entity);
+  if (!current) return null;
+
+  const state = getOverlay();
+  state.updated[entity] = { ...state.updated[entity], [current.id]: changes as Record<string, unknown> };
+  writeOverlay(state);
+  return { ...current, ...changes };
+};
+
 /** Escape hatch used by server.ts for derived (non-persisted) entities. */
 export const derived = <T>(records: T[]) => records;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { EntityName } from "@/lib/mock/seed";
 import { db, type SortDir } from "@/lib/mock/server";
 import { useAsync } from "./use-resource";
@@ -22,6 +22,7 @@ export function useDataTable<T extends { id: string }>(
   entity: EntityName,
   options: { initialSort?: string; initialSortDir?: SortDir; initialFilters?: Record<string, string>; pageSize?: number } = {},
 ) {
+  const [searchInput, setSearchInput] = useState("");
   const [state, setState] = useState<TableState>({
     search: "",
     page: 1,
@@ -30,6 +31,14 @@ export function useDataTable<T extends { id: string }>(
     sortDir: options.initialSortDir ?? "asc",
     filters: options.initialFilters ?? {},
   });
+
+  // Debounce so the simulated gateway latency is not paid on every keystroke.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setState((prev) => (prev.search === searchInput ? prev : { ...prev, search: searchInput, page: 1 }));
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const params = useMemo(
     () => ({
@@ -55,7 +64,7 @@ export function useDataTable<T extends { id: string }>(
     total: query.data?.total ?? 0,
     pageCount: query.data?.pageCount ?? 1,
     state,
-    setSearch: (search: string) => patch({ search, page: 1 }),
+    setSearch: setSearchInput,
     setPage: (page: number) => patch({ page }),
     setPageSize: (pageSize: number) => patch({ pageSize, page: 1 }),
     setSort: (sortKey: string, sortDir: SortDir) => patch({ sortKey, sortDir, page: 1 }),

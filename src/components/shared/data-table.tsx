@@ -163,6 +163,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
   };
 
   const showToolbar = !!(search || filters.length > 0 || exportName || selection);
+  const caption = `${rows.length} row(s) shown${pagination ? ` of ${pagination.total}` : ""}`;
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -253,7 +254,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
       )}
 
       <div className="overflow-hidden rounded-xl border">
-        <Table>
+        <Table aria-rowcount={pagination?.total ?? rows.length}>
+          <caption className="sr-only">{caption}</caption>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
               {selection && (
@@ -357,8 +359,8 @@ export function DataTable<T>(props: DataTableProps<T>) {
       </div>
 
       {pagination && pagination.total > 0 && (
-        <div className="flex flex-col items-center justify-between gap-3 text-sm sm:flex-row">
-          <p className="text-muted-foreground">
+        <div className="flex flex-col items-center justify-between gap-3 text-sm sm:flex-row" role="status">
+          <p className="text-muted-foreground" aria-live="polite">
             Page {pagination.page} of {pagination.pageCount} · {pagination.total} records
           </p>
           <div className="flex items-center gap-2">

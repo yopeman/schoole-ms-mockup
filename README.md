@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Schoole MS — School Management System
 
-## Getting Started
+A **frontend-only** school management portal built with Next.js 15 (App Router), React 19, TypeScript and Tailwind CSS v4.
 
-First, run the development server:
+There is **no backend, no database and no API layer**. All data is generated deterministically in the browser from a seed, and every edit is persisted to `localStorage` through a mock gateway that mirrors a REST API.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Script | Purpose |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | Vitest suite (88 tests, jsdom) |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Signing in
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The login page ships seven personas, each pre-filled. Every account uses the password **`demo1234`**.
 
-## Learn More
+| Role | Sees |
+| --- | --- |
+| Administrator | Everything, including settings and data tools |
+| Director | School-wide academic and operational oversight |
+| Teacher | Own classes, attendance register, marks entry |
+| Student | Own attendance, subjects, results and notices |
+| Parent / Family | Children's attendance, grades and fees |
+| Staff | Admissions pipeline, registry, asset register |
+| Accountant | Fees, payroll, expenses and financial reports |
 
-To learn more about Next.js, take a look at the following resources:
+Role gating is **UX-level only** — the data lives in the browser, so it is not a security boundary.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├─ app/
+│  ├─ (auth)/login/          persona picker
+│  ├─ (portal)/              guarded app shell + 24 feature routes
+│  │  ├─ error.tsx           render-error boundary with data reset
+│  │  └─ loading.tsx         route-level suspense fallback
+│  └─ not-found.tsx
+├─ components/
+│  ├─ dashboard/             charts and role widgets
+│  ├─ finance/               invoice + expense visuals
+│  ├─ layout/                sidebar, topbar, guard, search, nav config
+│  ├─ settings/
+│  ├─ shared/                DataTable, cards, badges, states
+│  └─ ui/                    shadcn/ui (Base UI) primitives
+├─ hooks/                    data, lookup, table and dashboard hooks
+├─ lib/
+│  ├─ auth/                  session context + permission map
+│  └─ mock/                  seed, gateway, store, analytics, generators
+└─ types/                    domain model (13 modules)
+```
 
-## Deploy on Vercel
+### The mock data layer
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`src/lib/mock/` is the only module that would change to move to a real backend.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| File | Role |
+| --- | --- |
+| `prng.ts` | Seeded mulberry32 PRNG — generated data is stable across reloads |
+| `seed/` | Typed builders producing 610 students, 58 teachers, 24 sections, 840 timetable slots, invoices, exams, notices and messages |
+| `generators.ts` | Attendance and exam marks derived from hashes of `(studentId, date)` — no storage cost |
+| `analytics.ts` | Pure aggregation functions used by dashboards and reports |
+| `server.ts` | The gateway: async `list` / `get` / `create` / `update` / `remove` with pagination, search, filters, sorting and simulated latency |
+| `store.ts` | In-memory records + `localStorage` overlay (create/update/delete) with `reset` |
+
+Swapping to a real API means replacing `server.ts` alone — page and hook code already talks to this interface.
+
+### Derived vs stored
+
+Only user-entered records are persisted. Attendance (~18k records) and exam marks are **computed on demand** from a seeded PRNG, so any date range or subject combination is free and deterministic. Manual edits layer on top via `attendanceOverrides` and `resultOverrides`.
+
+## Testing
+
+88 tests across 8 files:
+
+- `lib/mock/seed/seed.test.ts` — id uniqueness, referential integrity, timetable coverage, invoice arithmetic, gateway CRUD
+- `lib/mock/analytics.test.ts` — attendance bounds, ranking, grade bucketing, finance reconciliation
+- `components/dashboard.test.tsx` — all seven dashboards render with role-specific widgets
+- `components/people.test.tsx` — listing, pagination, filtering, role scoping
+- `components/academics.test.tsx` — timetable grid, attendance override, exam publishing
+- `components/finance.test.tsx` — billing summaries, payments, payroll, expense approvals
+- `components/communication.test.tsx` — audience targeting, replies, pipeline transitions
+- `components/settings.test.tsx` — profile persistence, academic year, permission map integrity
+
+## Notable behaviours
+
+- **Reset** — *User menu → Reset mock data* or *Settings → Data & Demo* restores the seed.
+- **Search** — `Cmd/Ctrl + K` opens a palette across students, teachers and pages.
+- **CSV export** — available on every directory and report.
+- **Theming** — indigo brand palette with dark mode support.

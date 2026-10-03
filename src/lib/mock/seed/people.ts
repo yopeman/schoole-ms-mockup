@@ -8,6 +8,7 @@ const stamp = { createdAt: "2026-03-01T09:00:00.000Z", updatedAt: "2026-03-01T09
 
 export const schoolProfile: SchoolProfile = {
   ...stamp,
+  id: "school-1",
   name: "Schoole International School",
   shortName: "SIS",
   tagline: "Empowering Minds, Building Futures",
