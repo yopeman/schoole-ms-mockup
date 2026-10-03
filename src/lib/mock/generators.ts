@@ -96,7 +96,7 @@ export const studentAbility = (studentId: string) => {
 
 export const randomAnnouncementPin = (index: number): Pick<Announcement, "pinned"> => ({ pinned: index === 0 });
 export const examResultFor = (
-  examSchedule: { id: string; examId: string; subjectId: string; classId: string; maxMarks: number },
+  examSchedule: { id: string; maxMarks: number; classId?: string; examId?: string; subjectId?: string },
   student: Student,
   examName: string,
   enteredById: string,
@@ -112,11 +112,11 @@ export const examResultFor = (
 
   return {
     id: `res-${examSchedule.id}-${student.id}`,
-    examId: examSchedule.examId,
+    examId: examSchedule.examId ?? "exam",
     examScheduleId: examSchedule.id,
     studentId: student.id,
-    subjectId: examSchedule.subjectId,
-    classId: examSchedule.classId,
+    subjectId: examSchedule.subjectId ?? "sub-eng",
+    classId: examSchedule.classId ?? student.classId,
     theoryMarks,
     totalMarks,
     gradePoint: 0,
