@@ -6,7 +6,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "regions": ["bom1"],
-  "poweredByHeader": false,
   "headers": [
     {
       "source": "/(.*)",
