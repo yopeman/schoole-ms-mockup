@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   BookOpen,
   ClipboardCheck,
@@ -46,14 +47,15 @@ export default function DashboardPage() {
   const { role, user } = useSession();
   const data = useDashboardData();
 
-  if (!role) return null;
-
-  const greeting = (() => {
+  // The clock differs between the server render and the client, so resolve the
+  // greeting after mount to keep hydration output stable.
+  const [greeting, setGreeting] = useState("Welcome");
+  useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 17) return "Good afternoon";
-    return "Good evening";
-  })();
+    setGreeting(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening");
+  }, []);
+
+  if (!role) return null;
 
   return (
     <>

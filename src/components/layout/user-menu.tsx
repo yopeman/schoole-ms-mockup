@@ -46,17 +46,19 @@ export function UserMenu() {
       />
 
       <DropdownMenuContent align="end" className="w-72">
-        <DropdownMenuLabel>
-          <div className="flex flex-col gap-0.5">
-            <span className="flex items-center gap-1.5">
-              <UserRound className="size-3.5" />
-              {user?.email}
-            </span>
-            <span className="text-muted-foreground text-xs font-normal">
-              {role ? ROLE_DESCRIPTIONS[role] : null}
-            </span>
-          </div>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <div className="flex flex-col gap-0.5">
+              <span className="flex items-center gap-1.5">
+                <UserRound className="size-3.5" />
+                {user?.email}
+              </span>
+              <span className="text-muted-foreground text-xs font-normal">
+                {role ? ROLE_DESCRIPTIONS[role] : null}
+              </span>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>

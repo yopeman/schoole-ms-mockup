@@ -146,7 +146,7 @@ export const ROLE_LABELS: Record<Role, string> = {
   director: "Director",
   teacher: "Teacher",
   student: "Student",
-  family: "Parent / Family",
+  family: "Parent",
   staff: "Staff",
   accountant: "Accountant",
 };

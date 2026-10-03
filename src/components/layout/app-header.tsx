@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -95,12 +96,14 @@ const NotificationsMenu = () => {
         }
       />
       <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuLabel className="flex items-center justify-between">
-          Notifications
-          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={markAllRead}>
-            Mark all read
-          </Button>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex items-center justify-between">
+            Notifications
+            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={markAllRead}>
+              Mark all read
+            </Button>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {items.length === 0 ? (
           <p className="text-muted-foreground px-2 py-6 text-center text-sm">No notifications</p>

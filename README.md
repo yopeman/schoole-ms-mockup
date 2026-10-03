@@ -29,7 +29,7 @@ The login page ships seven personas, each pre-filled. Every account uses the pas
 | Director | School-wide academic and operational oversight |
 | Teacher | Own classes, attendance register, marks entry |
 | Student | Own attendance, subjects, results and notices |
-| Parent / Family | Children's attendance, grades and fees |
+| Parent | Children's attendance, grades and fees |
 | Staff | Admissions pipeline, registry, asset register |
 | Accountant | Fees, payroll, expenses and financial reports |
 
