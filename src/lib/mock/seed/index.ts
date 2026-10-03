@@ -142,6 +142,10 @@ export const seed = {
   activityLogs,
   users,
   notifications,
+  /** Empty in the seed: attendance is derived, and this holds manual edits. */
+  attendanceOverrides: [] as import("@/types").AttendanceRecord[],
+  /** Manual marks entries layered over the derived exam results. */
+  resultOverrides: [] as { id: string; examId: string; subjectId: string; studentId: string; marks: number; updatedById: string }[],
 };
 
 export type Seed = typeof seed;

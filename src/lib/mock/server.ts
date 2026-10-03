@@ -7,7 +7,7 @@
 import { attendanceRange, examResultFor, summarize } from "./generators";
 import * as store from "./store";
 import { DEFAULT_LIST_LIMIT, TODAY, type EntityName } from "./seed";
-import type { AttendanceRecord, ExamResult, Student } from "@/types";
+import type { AttendanceRecord, AttendanceStatus, ExamResult, Student } from "@/types";
 
 export type SortDir = "asc" | "desc";
 
@@ -146,14 +146,63 @@ export const reset = async () => {
 /* ------------------------------------------------------------------ */
 
 export const attendance = {
-  list: async (params: { start: string; end: string; studentIds?: string[]; classId?: string; sectionId?: string }): Promise<AttendanceRecord[]> => {
+  list: async (params: {
+    start: string;
+    end: string;
+    studentIds?: string[];
+    classId?: string;
+    sectionId?: string;
+  }): Promise<AttendanceRecord[]> => {
     await delay();
+
     let students = store.selectAll<Student>("students");
     if (params.studentIds?.length) students = students.filter((s) => params.studentIds!.includes(s.id));
     if (params.classId) students = students.filter((s) => s.classId === params.classId);
     if (params.sectionId) students = students.filter((s) => s.sectionId === params.sectionId);
-    return attendanceRange(students, params.start, params.end, "stf-002");
+
+    const generated = attendanceRange(students, params.start, params.end, "stf-002");
+
+    // Manual edits win over the deterministic values.
+    const overrides = new Map(
+      store.selectAll<AttendanceRecord>("attendanceOverrides").map((record) => [`${record.studentId}|${record.date}`, record]),
+    );
+
+    return generated.map((record) => overrides.get(`${record.studentId}|${record.date}`) ?? record);
   },
+
+  /** Records or updates one student's status for one date. */
+  setStatus: async (
+    studentId: string,
+    date: string,
+    status: AttendanceStatus,
+    markedById: string,
+    remarks?: string,
+  ): Promise<AttendanceRecord> => {
+    await delay();
+    const student = store.selectAll<Student>("students").find((s) => s.id === studentId);
+    if (!student) throw new Error(`Unknown student ${studentId}`);
+
+    const key = `${studentId}|${date}`;
+    const existing = store.selectAll<AttendanceRecord>("attendanceOverrides").find((r) => `${r.studentId}|${r.date}` === key);
+
+    const payload = {
+      id: existing?.id ?? `att-override-${studentId}-${date}`,
+      studentId,
+      classId: student.classId,
+      sectionId: student.sectionId,
+      date,
+      status,
+      markedById,
+      remarks,
+    } satisfies Omit<AttendanceRecord, "createdAt" | "updatedAt">;
+
+    const record = existing
+      ? store.patch<AttendanceRecord>("attendanceOverrides", existing.id, payload)!
+      : store.insert<AttendanceRecord>("attendanceOverrides", payload as AttendanceRecord);
+
+    return record;
+  },
+
   summary: async (params: { start: string; end: string; studentIds?: string[] }) => {
     const records = await attendance.list(params);
     return summarize(records);
