@@ -93,7 +93,7 @@ export default function LandingPage() {
     <div className="flex min-h-svh flex-col">
       {/* Header */}
       <header className="bg-background/80 sticky top-0 z-40 border-b backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4">
+        <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-6">
           <div className="flex items-center gap-3">
             <Logo />
             <div className="min-w-0">
@@ -129,8 +129,8 @@ export default function LandingPage() {
       <main className="flex-1">
         {/* Hero */}
         <section className="from-primary/5 to-background bg-gradient-to-b">
-          <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:py-24">
-            <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto w-full max-w-[1440px] px-6 py-16 sm:py-24">
+            <div className="mx-auto max-w-4xl text-center">
               <Badge variant="secondary" className="mb-6 gap-1.5">
                 <Sparkles className="size-3" />
                 Frontend demo · no backend required
@@ -140,7 +140,7 @@ export default function LandingPage() {
                 Every part of school operations, in one portal
               </h1>
 
-              <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg text-balance">
+              <p className="text-muted-foreground mx-auto mt-6 max-w-3xl text-lg text-balance">
                 Students, staff, academics, attendance, results and finance — with a dashboard and a permission set
                 tailored to each of the seven roles that run a school.
               </p>
@@ -161,7 +161,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <dl className="mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-4 lg:grid-cols-4">
+            <dl className="mx-auto mt-16 grid max-w-6xl grid-cols-2 gap-4 lg:grid-cols-4">
               {STATS.map((stat) => (
                 <div key={stat.label} className="bg-card rounded-xl border p-5 text-center">
                   <dt className="text-muted-foreground text-sm">{stat.label}</dt>
@@ -174,8 +174,8 @@ export default function LandingPage() {
 
         {/* Features */}
         <section id="features" className="scroll-mt-20 border-t">
-          <div className="mx-auto w-full max-w-6xl px-4 py-20">
-            <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto w-full max-w-[1440px] px-6 py-20">
+            <div className="mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-semibold tracking-tight">Built for the whole school</h2>
               <p className="text-muted-foreground mt-3">
                 Academic and administrative workflows that share one data model, so a mark entered by a teacher shows up
@@ -199,8 +199,8 @@ export default function LandingPage() {
 
         {/* Roles */}
         <section id="roles" className="bg-muted/30 scroll-mt-20 border-t">
-          <div className="mx-auto w-full max-w-6xl px-4 py-20">
-            <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto w-full max-w-[1440px] px-6 py-20">
+            <div className="mx-auto max-w-3xl text-center">
               <h2 className="text-3xl font-semibold tracking-tight">Seven roles, seven portals</h2>
               <p className="text-muted-foreground mt-3">
                 Sign in as any persona to see how the same data model reshapes itself around what that person is
@@ -236,7 +236,7 @@ export default function LandingPage() {
 
         {/* Modules */}
         <section id="modules" className="scroll-mt-20 border-t">
-          <div className="mx-auto w-full max-w-6xl px-4 py-20">
+          <div className="mx-auto w-full max-w-[1440px] px-6 py-20">
             <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
               <div>
                 <h2 className="text-3xl font-semibold tracking-tight">
@@ -276,7 +276,7 @@ export default function LandingPage() {
 
         {/* CTA */}
         <section className="border-t">
-          <div className="bg-primary mx-auto my-16 w-[calc(100%-2rem)] max-w-6xl rounded-2xl px-6 py-14 text-center text-primary-foreground">
+          <div className="bg-primary mx-auto my-16 w-[calc(100%-3rem)] max-w-[1440px] rounded-2xl px-6 py-14 text-center text-primary-foreground">
             <h2 className="text-3xl font-semibold tracking-tight text-balance">
               Ready to walk through the school?
             </h2>
@@ -303,7 +303,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t">
-        <div className="text-muted-foreground mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm sm:flex-row">
+        <div className="text-muted-foreground mx-auto flex w-full max-w-[1440px] flex-col items-center justify-between gap-4 px-6 py-8 text-sm sm:flex-row">
           <div className="flex items-center gap-2">
             <School className="size-4" />
             <span>
