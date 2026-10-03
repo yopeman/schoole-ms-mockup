@@ -1,0 +1,21 @@
+# Build output and dependencies are reinstalled/rebuilt on Vercel
+node_modules
+.next
+out
+.turbo
+.vercel
+
+# Local tooling caches
+*.tsbuildinfo
+coverage
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor / OS noise
+.DS_Store
+.vscode
+.idea
+*.log
