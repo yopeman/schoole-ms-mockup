@@ -68,6 +68,13 @@ export function useLookups() {
       teacherName: (id?: string) => personName(teacherMap.get(id ?? "")),
       studentName: (id?: string) => personName(studentMap.get(id ?? "")),
       staffName: (id?: string) => personName(staff.find((s) => s.id === id)),
+      guardianName: (guardianId?: string) => {
+        for (const family of families) {
+          const guardian = family.guardians.find((g) => g.id === guardianId);
+          if (guardian) return `${guardian.firstName} ${guardian.lastName}`;
+        }
+        return "—";
+      },
       parentName: (studentId?: string) => {
         const student = studentMap.get(studentId ?? "");
         const guardian = student?.guardians.find((g: Guardian) => g.isPrimary) ?? student?.guardians[0];

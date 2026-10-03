@@ -3,6 +3,9 @@ import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 
 // Recharts and Base UI measure elements; jsdom provides neither.
+// jsdom implements neither of these; components rely on both.
+Element.prototype.scrollIntoView ??= () => {};
+
 globalThis.ResizeObserver ??= class {
   observe() {}
   unobserve() {}
