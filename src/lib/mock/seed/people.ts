@@ -215,6 +215,5 @@ export const buildUsers = (
   return users;
 };
 
-export const MOCK_PASSWORD = "demo1234";
 export const ACADEMIC_YEAR_ID = ACADEMIC_YEAR.id;
 export const TOTAL_CLASSES = classSeed.length;
